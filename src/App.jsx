@@ -8,6 +8,7 @@ import UpdateMenu from "./pages/UpdateMenu.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import DetailMenu from "./pages/DetailMenu.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,15 +25,27 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <Home />,
+    element: (
+      <PrivateRoute>
+        <Home />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/add-recipe",
-    element: <AddRecipe />,
+    element: (
+      <PrivateRoute>
+        <AddRecipe />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/detail-profile",
-    element: <DetailProfile />,
+    element: (
+      <PrivateRoute>
+        <DetailProfile />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/update-recipe/:menuId",

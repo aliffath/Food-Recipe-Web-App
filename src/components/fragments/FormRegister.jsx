@@ -110,7 +110,7 @@ const FormRegister = () => {
                   Already have account?
                   <span>
                     <Link
-                      to="/"
+                      to="/login"
                       style={{ color: " #efc81a" }}
                       className="text-decoration-none"
                     >
