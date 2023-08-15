@@ -1,36 +1,49 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import axios from "axios";
+
 import { useParams } from "react-router-dom";
 import { BiBookmark, BiLike } from "react-icons/bi";
 import "./detailMenu.css";
 import photo from "../../../assets/Images/user.jpg";
+import { detailRecipe } from "./../../../redux/actions/product";
+import { useDispatch, useSelector } from "react-redux";
+import { LineWave } from "react-loader-spinner";
 
 const Index = () => {
   const { menuId } = useParams();
-  const [data, setData] = useState([]);
-  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
+  const { data, isLoading } = useSelector((state) => state.productReducer);
 
   useEffect(() => {
-    const getDetail = async () => {
-      try {
-        const getRecipe = await axios.get(
-          import.meta.env.VITE_REACT_BACKEND_URL + `/recipe/${menuId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(getRecipe);
-        setData(getRecipe.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getDetail();
-  }, [menuId, token]);
+    dispatch(detailRecipe(menuId));
+  }, [dispatch, menuId]);
 
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          paddingLeft: "50px",
+        }}
+      >
+        <LineWave
+          height="345"
+          width="340"
+          color="#efc81a"
+          ariaLabel="line-wave"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          firstLineColor=""
+          middleLineColor=""
+          lastLineColor=""
+        />
+      </div>
+    );
+  }
   return (
     <Fragment>
       <Container className="my-5">
@@ -54,13 +67,13 @@ const Index = () => {
                   />
                 </div>
                 <div>
-                  <p className="m-0">{data.author}</p>
-                  <p className="m-0 fw-bold">{data.category}</p>
+                  <p className="m-0">{data?.data?.author}</p>
+                  <p className="m-0 fw-bold">{data?.data?.category}</p>
                 </div>
               </div>
 
               <div>
-                <p className="m-0">{data.create_at}</p>
+                <p className="m-0">{data?.data?.create_at}</p>
                 <p className="m-0">20 Likes - 2 Comments</p>
               </div>
             </div>
@@ -70,11 +83,13 @@ const Index = () => {
 
       <Container>
         <Row>
-          <h1 className="fw-bold text-center mb-5 color">{data.title}</h1>
+          <h1 className="fw-bold text-center mb-5 color">
+            {data?.data?.title}
+          </h1>
           <Col md={12} className="d-flex justify-content-center">
             <img
               className="object-fit-cover rounded main-photo"
-              src={data.image}
+              src={data?.data?.image}
               alt="image"
               width="800px"
               height="450px"
@@ -84,7 +99,7 @@ const Index = () => {
         <Col md={12} className="my-5">
           <h3 className="fw-semibold">Ingredients</h3>
           <ul>
-            {data?.ingredients?.split(",").map((ingredient, index) => (
+            {data?.data?.ingredients?.split(",").map((ingredient, index) => (
               <li key={index} className="py-1">
                 {ingredient.trim()}
               </li>

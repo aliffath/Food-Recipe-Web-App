@@ -10,3 +10,19 @@
 .form_control::placeholder {
   font-size: 12px;
 }
+
+.input_container {
+  position: relative;
+}
+
+.input_container input {
+  padding-right: 40px; /* Memberikan ruang untuk ikon */
+}
+
+.password_icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}

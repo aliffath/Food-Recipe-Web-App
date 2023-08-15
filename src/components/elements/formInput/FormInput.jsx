@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import style from "./style.module.css";
-const Index = (props) => {
+const FormInput = (props) => {
   const { label, type, placeholder, name, value, onChange } = props;
   return (
     <>
@@ -18,7 +18,7 @@ const Index = (props) => {
     </>
   );
 };
-Index.propTypes = {
+FormInput.propTypes = {
   label: PropTypes.string,
   type: PropTypes.string,
   placeholder: PropTypes.string,
@@ -27,4 +27,4 @@ Index.propTypes = {
   onChange: PropTypes.func,
 };
 
-export default Index;
+export default FormInput;

@@ -1,14 +1,15 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import Home from "./pages/Home.jsx";
-import AddRecipe from "./pages/AddRecipe.jsx";
-import DetailProfile from "./pages/DetailProfile.jsx";
-import UpdateMenu from "./pages/UpdateMenu.jsx";
-import LandingPage from "./pages/LandingPage.jsx";
-import DetailMenu from "./pages/DetailMenu.jsx";
-import NotFound from "./pages/NotFound.jsx";
-import PrivateRoute from "./components/PrivateRoute.jsx";
+
+import Login from "../pages/Login.jsx";
+import Register from "../pages/Register.jsx";
+import Home from "../pages/Home.jsx";
+import AddRecipe from "../pages/AddRecipe.jsx";
+import DetailProfile from "../pages/DetailProfile.jsx";
+import UpdateMenu from "../pages/UpdateMenu.jsx";
+import LandingPage from "../pages/LandingPage.jsx";
+import DetailMenu from "../pages/DetailMenu.jsx";
+import NotFound from "../pages/NotFound.jsx";
+import PrivateRoute from "../components/PrivateRoute.jsx";
 
 const router = createBrowserRouter([
   {

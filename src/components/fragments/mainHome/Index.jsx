@@ -26,7 +26,7 @@ const Head = () => {
     (page) => {
       const token = localStorage.getItem("token");
       axios
-        .get("http://localhost:5000/recipes", {
+        .get(import.meta.env.VITE_REACT_BACKEND_URL + `/recipes`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -83,6 +83,7 @@ const Navigation = () => {
                   <h5 className="m-0">{profile?.data[0]?.name}</h5>
                   <h5
                     className="m-0 fw-bold"
+                    style={{ cursor: "pointer" }}
                     onClick={() => {
                       localStorage.removeItem("token");
                       navigate("/");

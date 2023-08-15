@@ -3,15 +3,9 @@ import PropTypes from "prop-types";
 const Index = ({ onChange }) => {
   return (
     <>
-      <div className="mb-3 form-check">
-        <input
-          type="checkbox"
-          className="form-check-input"
-          onChange={onChange}
-        />
-        <label className="form-check-label">
-          I agree to terms and condition
-        </label>
+      <div className="mb-3 d-flex gap-3" style={{ accentColor: " #efc81a" }}>
+        <input type="checkbox" onChange={onChange} />
+        <label>I agree to terms and condition</label>
       </div>
     </>
   );

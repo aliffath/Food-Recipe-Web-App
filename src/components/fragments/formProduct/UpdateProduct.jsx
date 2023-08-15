@@ -1,45 +1,43 @@
 import { Fragment, useEffect, useState } from "react";
-import { Container, Form } from "react-bootstrap";
+import { Container, Form, Row, Col } from "react-bootstrap";
 import "./Recipe.css";
-import axios from "axios";
+
+import { detailRecipe, updateRecipe } from "./../../../redux/actions/product";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Slide, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LineWave } from "react-loader-spinner";
 
 const UpdateProduct = () => {
   const { menuId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { data, isLoading, isError } = useSelector(
+    (state) => state.productReducer
+  );
   const [image, setImage] = useState(null);
   const [inputData, setInputData] = useState({
     title: "",
     ingredients: "",
-    category_id: "1",
+    category_id: "",
     photo_url: "",
   });
 
   useEffect(() => {
-    async function getRecipe() {
-      const token = localStorage.getItem("token");
-      axios
-        .get(`http://localhost:5000/recipe/${menuId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          setInputData({
-            ...inputData,
-            title: res.data.data.title,
-            ingredients: res.data.data.ingredients,
-            photo_url: res.data.data.image,
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    getRecipe();
+    dispatch(detailRecipe(menuId));
   }, []);
+
+  useEffect(() => {
+    data &&
+      setInputData({
+        ...inputData,
+        title: data.data.title,
+        ingredients: data.data.ingredients,
+        photo_url: data.data.image,
+        category_id: data.data.category,
+      });
+  }, [data]);
 
   const handleInput = (e) => {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
@@ -54,7 +52,7 @@ const UpdateProduct = () => {
       });
   };
 
-  const postRecipe = (e) => {
+  const postRecipe = async (e) => {
     e.preventDefault();
     const data = new FormData();
     data.append("title", inputData.title);
@@ -62,28 +60,39 @@ const UpdateProduct = () => {
     data.append("category_id", inputData.category_id);
     data.append("image", image);
 
-    console.log(image);
-    const token = localStorage.getItem("token");
-
-    axios
-      .put(`http://localhost:5000/updateRecipe/${menuId}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        toast.success("Update Recipe Succcesfully");
-        setTimeout(() => {
-          navigate("/detail-profile");
-        }, 4000);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Failed Update Recipe");
-      });
+    try {
+      await dispatch(updateRecipe(data, menuId, navigate));
+    } catch (error) {
+      toast.error(isError || "Internal server error");
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          paddingLeft: "50px",
+        }}
+      >
+        <LineWave
+          height="345"
+          width="340"
+          color="#efc81a"
+          ariaLabel="line-wave"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          firstLineColor=""
+          middleLineColor=""
+          lastLineColor=""
+        />
+      </div>
+    );
+  }
 
   return (
     <Fragment>
@@ -146,19 +155,24 @@ const UpdateProduct = () => {
               style={{ backgroundColor: "#f6f5f4", height: "200px" }}
             />
           </div>
-          {/* <Row>
-          <Col md={3} className="mt-4">
-            <Form.Select
-              className="form-select form-select-sm py-3 bg-body-tertiary"
-              aria-label="select example"
-            >
-              <option selected>Category</option>
-              <option value="1">Main Course</option>
-              <option value="2">Dessert</option>
-              <option value="3">Appetizer</option>
-            </Form.Select>
-          </Col>
-        </Row> */}
+          <Row>
+            <Col md={3} className="mt-4">
+              <Form.Select
+                className="form-select form-select-sm py-3 bg-body-tertiary"
+                aria-label="select example"
+                value={inputData.category_id}
+                onChange={handleInput}
+                name="category_id"
+              >
+                <option value="" disabled>
+                  Category
+                </option>
+                <option value="1">Main Course</option>
+                <option value="2">Dessert</option>
+                <option value="3">Appetizer</option>
+              </Form.Select>
+            </Col>
+          </Row>
           <div className="my-5 d-flex justify-content-center">
             <button
               type="submit"

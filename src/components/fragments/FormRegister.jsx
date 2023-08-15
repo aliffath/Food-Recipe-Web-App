@@ -1,16 +1,23 @@
 import { Container, Col, Row, Form } from "react-bootstrap";
 import Header from "../elements/authHeader/Index";
-import InputAuth from "../elements/formInput/Index";
+import InputAuth from "../elements/formInput/FormInput";
+import PassAuth from "../elements/formInput/FormPassword";
 import CheckBookAuth from "../elements/checkBookAuth/Index";
 import ButtonAuth from "../elements/btnAuth/Index";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
+
+import { useDispatch, useSelector } from "react-redux";
+import { actionRegister } from "./../../redux/actions/auth";
 import { useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LineWave } from "react-loader-spinner";
 
 const FormRegister = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isError, isLoading } = useSelector((state) => state.authReducer);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -35,22 +42,39 @@ const FormRegister = () => {
       toast.warning("Please check the checkbox");
       return;
     }
-
-    axios
-      .post("http://localhost:5000/register", formData)
-      .then((response) => {
-        console.log(response);
-
-        toast.success("Register Successfully");
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error("Failed to register user");
-      });
+    try {
+      await dispatch(actionRegister(formData, navigate));
+    } catch (error) {
+      toast.error(isError || "Internal server error");
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          paddingLeft: "50px",
+        }}
+      >
+        <LineWave
+          height="345"
+          width="340"
+          color="#efc81a"
+          ariaLabel="line-wave"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          firstLineColor=""
+          middleLineColor=""
+          lastLineColor=""
+        />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -96,7 +120,7 @@ const FormRegister = () => {
                   onChange={handleChange}
                   placeholder="Enter Email Address"
                 />
-                <InputAuth
+                <PassAuth
                   label="Password"
                   name="password"
                   value={formData.password}

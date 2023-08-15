@@ -1,16 +1,23 @@
 import { Container, Col, Row, Form } from "react-bootstrap";
 import Header from "../elements/authHeader/Index";
-import InputAuth from "../elements/formInput/Index";
+import PassAuth from "../elements/formInput/FormPassword";
+import InputAuth from "../elements/formInput/FormInput";
+
 import CheckBookAuth from "../elements/checkBookAuth/Index";
 import ButtonAuth from "../elements/btnAuth/Index";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+
+import { useDispatch, useSelector } from "react-redux";
+import { actionLogin } from "./../../redux/actions/auth";
 import { useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LineWave } from "react-loader-spinner";
 
 const FormLogin = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isError, isLoading } = useSelector((state) => state.authReducer);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -18,6 +25,9 @@ const FormLogin = () => {
   const [isChecked, setIsChecked] = useState(false);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleCheckbox = () => {
+    setIsChecked(!isChecked);
   };
 
   const handleLogin = async (e) => {
@@ -32,15 +42,39 @@ const FormLogin = () => {
       toast.warning("Please check the checkboox");
       return;
     }
-    axios.post("http://localhost:5000/login", formData).then((response) => {
-      console.log(response);
-      localStorage.setItem("token", response.data.token);
-      toast.success("Login Succcesfully");
-      setTimeout(() => {
-        navigate("/home");
-      }, 2000);
-    });
+    try {
+      await dispatch(actionLogin(formData, navigate));
+    } catch (error) {
+      toast.error(isError || "Internal server error");
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          paddingLeft: "50px",
+        }}
+      >
+        <LineWave
+          height="345"
+          width="340"
+          color="#efc81a"
+          ariaLabel="line-wave"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          firstLineColor=""
+          middleLineColor=""
+          lastLineColor=""
+        />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -74,7 +108,7 @@ const FormLogin = () => {
                   onChange={handleChange}
                   placeholder="Enter Email Address"
                 />
-                <InputAuth
+                <PassAuth
                   label="Password"
                   type="password"
                   name="password"
@@ -82,7 +116,8 @@ const FormLogin = () => {
                   onChange={handleChange}
                   placeholder="Enter Password"
                 />
-                <CheckBookAuth onChange={(checked) => setIsChecked(checked)} />
+
+                <CheckBookAuth checked={isChecked} onChange={handleCheckbox} />
                 <ButtonAuth text="Login" />
                 <p className="mt-3 d-flex justify-content-center align-items-center">
                   Dont have an account?

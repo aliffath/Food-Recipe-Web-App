@@ -1,81 +1,80 @@
 import { Fragment, useEffect, useState } from "react";
 import { Container, Nav, Row, Col, Button, Modal } from "react-bootstrap";
-// import menu from "../../../assets/Images/bomb-chiken.jpg";
+
 import style from "./style.module.css";
-import axios from "axios";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+// import axios from "axios";
+import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
+import { getMyRecipe, deleteRecipe } from "./../../../redux/actions/product";
+import { useDispatch, useSelector } from "react-redux";
+import { LineWave } from "react-loader-spinner";
+
 const Index = () => {
-  const [recipe, setRecipe] = useState([]);
   const [show, setShow] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+
+  const dispatch = useDispatch();
+  const { recipe, isLoading } = useSelector((state) => state.myProductReducer);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const getMyrecipe = (page) => {
-    const token = localStorage.getItem("token");
-
-    axios
-      .get("http://localhost:5000/myRecipe", {
-        params: {
-          limit: 2,
-          page: page,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        toast.success("Get My Recipe Successfully", { toastId: "1" });
-        setRecipe(response.data);
-        setTotalPage(response.data.pagination.totalPage);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Recipe Not Found", { toastId: "1" });
-      });
-  };
-
   const handleNext = () => {
     if (currentPage < totalPage) {
-      setCurrentPage((prevPage) => prevPage + 1);
+      setCurrentPage(currentPage + 1);
     }
   };
 
   const handlePrevious = () => {
     if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
+      setCurrentPage(currentPage - 1);
     }
   };
 
-  useEffect(() => {
-    getMyrecipe(currentPage);
-  }, [currentPage]);
-
-  const deleteRecipe = (id) => {
-    const token = localStorage.getItem("token");
-    axios
-      .delete(`http://localhost:5000/deleteRecipe/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        getMyrecipe();
-        toast.success("Delete Recipe Successfully");
-      })
-      .catch((err) => {
-        console.log(err);
-        getMyrecipe();
-        toast.error("Delete Recipe Failed");
-      });
+  const handleDelete = (id) => {
+    dispatch(deleteRecipe(id));
   };
+
+  useEffect(() => {
+    dispatch(getMyRecipe(currentPage))
+      .then((result) => {
+        console.log(result);
+        setTotalPage(result.data.pagination.totalPage);
+      })
+      .catch((error) => {
+        console.error("Error fetching recipes:", error);
+      });
+  }, [dispatch, currentPage]);
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          paddingLeft: "50px",
+        }}
+      >
+        <LineWave
+          height="345"
+          width="340"
+          color="#efc81a"
+          ariaLabel="line-wave"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          firstLineColor=""
+          middleLineColor=""
+          lastLineColor=""
+        />
+      </div>
+    );
+  }
 
   return (
     <Fragment>
@@ -200,7 +199,7 @@ const Index = () => {
                               <Button
                                 className="border border-0 fw-bold py-1 px-3 rounded"
                                 onClick={() => {
-                                  deleteRecipe(item.id);
+                                  handleDelete(item.id);
                                   handleClose();
                                 }}
                                 style={{ backgroundColor: "#F57E71" }}

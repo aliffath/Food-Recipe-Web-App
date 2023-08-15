@@ -1,18 +1,24 @@
 import { Fragment, useState } from "react";
-import { Container, Form } from "react-bootstrap";
+import { Container, Form, Row, Col } from "react-bootstrap";
 import "./Recipe.css";
-import axios from "axios";
+// import axios from "axios";
+
+import { useDispatch, useSelector } from "react-redux";
+import { addRecipe } from "./../../../redux/actions/product";
 import { useNavigate } from "react-router-dom";
 import { Slide, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LineWave } from "react-loader-spinner";
 
 const AddProduct = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isError, isLoading } = useSelector((state) => state.productReducer);
   const [image, setImage] = useState(null);
   const [inputData, setInputData] = useState({
     title: "",
     ingredients: "",
-    category_id: "1",
+    category_id: "",
     photo_url: "",
   });
 
@@ -29,7 +35,7 @@ const AddProduct = () => {
       });
   };
 
-  const postRecipe = (e) => {
+  const postRecipe = async (e) => {
     e.preventDefault();
     const data = new FormData();
     data.append("title", inputData.title);
@@ -38,34 +44,53 @@ const AddProduct = () => {
     data.append("image", image);
 
     console.log(image);
-    const token = localStorage.getItem("token");
 
-    axios
-      .post("http://localhost:5000/postRecipe", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        toast.success("Add Recipe Succcesfully");
-        setTimeout(() => {
-          navigate("/home");
-        }, 4000);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Failed Add Recipe");
-      });
+    const { title, ingredients, category_id, photo_url } = inputData;
+    if (!title || !ingredients || !category_id || !photo_url) {
+      toast.error("Please fill in all the fields");
+      return;
+    }
+
+    try {
+      await dispatch(addRecipe(data, navigate));
+    } catch (error) {
+      toast.error(isError || "Internal server error");
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          paddingLeft: "50px",
+        }}
+      >
+        <LineWave
+          height="345"
+          width="340"
+          color="#efc81a"
+          ariaLabel="line-wave"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          firstLineColor=""
+          middleLineColor=""
+          lastLineColor=""
+        />
+      </div>
+    );
+  }
 
   return (
     <Fragment>
       <Container className="my-5">
         <ToastContainer
           position="bottom-center"
-          autoClose={2000}
+          autoClose={1000}
           hideProgressBar={false}
           transition={Slide}
           newestOnTop
@@ -76,8 +101,10 @@ const AddProduct = () => {
           pauseOnHover
           theme="colored"
         />
+
         <Form onSubmit={postRecipe}>
           <div className="mb-3">
+            <p className="d-flex justify-content-end m-0">Max File 1MB</p>
             <label
               className="addphoto w-100"
               style={{ height: "250px" }}
@@ -122,19 +149,24 @@ const AddProduct = () => {
               style={{ backgroundColor: "#f6f5f4", height: "200px" }}
             />
           </div>
-          {/* <Row>
-          <Col md={3} className="mt-4">
-            <Form.Select
-              className="form-select form-select-sm py-3 bg-body-tertiary"
-              aria-label="select example"
-            >
-              <option selected>Category</option>
-              <option value="1">Main Course</option>
-              <option value="2">Dessert</option>
-              <option value="3">Appetizer</option>
-            </Form.Select>
-          </Col>
-        </Row> */}
+          <Row>
+            <Col md={3} className="mt-4">
+              <Form.Select
+                className="form-select form-select-sm py-3 bg-body-tertiary"
+                aria-label="select example"
+                value={inputData.category_id}
+                onChange={handleInput}
+                name="category_id"
+              >
+                <option value="" disabled>
+                  Category
+                </option>
+                <option value="1">Main Course</option>
+                <option value="2">Dessert</option>
+                <option value="3">Appetizer</option>
+              </Form.Select>
+            </Col>
+          </Row>
           <div className="my-5 d-flex justify-content-center">
             <button
               type="submit"
