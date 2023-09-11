@@ -45,8 +45,8 @@ This app was built with some technologies below:
 - Axios
 - Redux
 - Bootstrap
-- Reactstrap
-- styled-components
+- React-botstrap
+- React-toasrify
 
 ## Installation
 
@@ -71,6 +71,24 @@ If you want to run this project locally, we recommend you configure the back-end
 ```
 
 - Type `npm run dev` To Start Website
+
+## Screenshot
+
+| Login Page                                                                           | Register Page                                                                              |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| [![login.png](https://i.postimg.cc/wxXPvT9C/login.png)](https://postimg.cc/mhrVp4zj) | [![register.png](https://i.postimg.cc/zGBP0CTN/register.png)](https://postimg.cc/rKBJpthZ) |
+
+| Landing Page                                                                                       | Deail Recipe Page                                                                                  |
+| -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [![landing-page.png](https://i.postimg.cc/kgJd9R8Y/landing-page.png)](https://postimg.cc/rKPHNmf5) | [![detail-resep.png](https://i.postimg.cc/Hkp6jQ65/detail-resep.png)](https://postimg.cc/nCP4PQbc) |
+
+| Deail Profile Page                                                                                     | Home Page                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| [![profile-detail.png](https://i.postimg.cc/gc39ZHHB/profile-detail.png)](https://postimg.cc/jCqkVN9z) | [![home.png](https://i.postimg.cc/50vr8fLF/home.png)](https://postimg.cc/N9sbcqNg) |
+
+| Add Recipe Page                                                                                | Update Recipe Page                                                                                   |
+| ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| [![add-recipe.png](https://i.postimg.cc/k559NRgR/add-recipe.png)](https://postimg.cc/VJ23m6Mz) | [![update-recipe.png](https://i.postimg.cc/YCzqzwNZ/update-recipe.png)](https://postimg.cc/VJ58zpVW) |
 
 ## Contributing
 
