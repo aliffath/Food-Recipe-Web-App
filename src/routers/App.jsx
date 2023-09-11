@@ -10,6 +10,7 @@ import LandingPage from "../pages/LandingPage.jsx";
 import DetailMenu from "../pages/DetailMenu.jsx";
 import NotFound from "../pages/NotFound.jsx";
 import PrivateRoute from "../components/PrivateRoute.jsx";
+import EditProfile from "../pages/EditProfile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
   {
     path: "/detail-menu/:menuId",
     element: <DetailMenu />,
+  },
+  {
+    path: "/edit-profile/:userId",
+    element: <EditProfile />,
   },
   {
     path: "*",

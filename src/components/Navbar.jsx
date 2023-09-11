@@ -18,11 +18,14 @@ const Navigation = () => {
 
   useEffect(() => {
     function getProfile() {
-      return axios.get(`http://localhost:5000/detail/${decoded?.id}`, {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      });
+      return axios.get(
+        import.meta.env.VITE_REACT_BACKEND_URL + `/detail/${decoded?.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
     }
 
     getProfile().then((res) => {
@@ -71,14 +74,17 @@ const Navigation = () => {
                     backgroundColor: "#efc81a",
                   }}
                 ></div>
-                <div>
-                  <img
-                    src={user}
-                    alt="profile"
-                    width="50px"
-                    className="rounded-circle"
-                  />
-                </div>
+                <Link to={`/edit-profile/${profile?.data[0]?.id}`}>
+                  <div>
+                    <img
+                      src={profile?.data[0]?.photo || user}
+                      alt="profile"
+                      width="50px"
+                      height="50px"
+                      className="rounded-circle"
+                    />
+                  </div>
+                </Link>
                 <div>
                   <h5 className="m-0">{profile?.data[0]?.name}</h5>
                   <h5
