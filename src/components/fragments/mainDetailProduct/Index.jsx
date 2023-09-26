@@ -73,7 +73,13 @@ const Index = () => {
               </div>
 
               <div>
-                <p className="m-0">{data?.data?.create_at}</p>
+                <p className="m-0">
+                  {new Date(data?.data?.create_at).toLocaleDateString("id-ID", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
                 <p className="m-0">20 Likes - 2 Comments</p>
               </div>
             </div>
