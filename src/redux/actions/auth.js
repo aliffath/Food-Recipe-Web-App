@@ -9,6 +9,9 @@ export const actionLogin = (data, navigate) => async (dispatch) => {
       data
     );
     localStorage.setItem("token", result.data.token);
+    localStorage.setItem("name", result.data.dataUser.name);
+    localStorage.setItem("photo", result.data.dataUser.photo);
+
     dispatch({ payload: result.data, type: "AUTH_LOGIN_SUCCESS" });
     toast.success("Login Successfully");
     setTimeout(() => {
@@ -44,5 +47,56 @@ export const actionRegister = (data, navigate) => async (dispatch) => {
       type: "AUTH_LOGIN_FAILED",
     });
     toast.error(error.response.data.message);
+  }
+};
+
+export const actionUpdate = (data, id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("token");
+    dispatch({ type: "AUTH_UPDATE_PENDING" });
+    const result = await axios.put(
+      import.meta.env.VITE_REACT_BACKEND_URL + `/update/${id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log(result);
+    dispatch({ payload: result.data, type: "AUTH_UPDATE_SUCCESS" });
+    toast.success("Update Successfully");
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      payload: error.response?.data?.message,
+      type: "AUTH_UPDATE_FAILED",
+    });
+    toast.error(error.response?.data?.message);
+  }
+};
+
+export const getProfile = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("token");
+    dispatch({ type: "GET_PROFILE_PENDING" });
+    const result = await axios.get(
+      import.meta.env.VITE_REACT_BACKEND_URL + `/detail/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(result);
+    dispatch({ payload: result.data, type: "GET_PROFILE_SUCCESS" });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      payload: error.response?.data?.message,
+      type: "GET_PROFILE_FAILED",
+    });
+    toast.error(error.response?.data?.message);
   }
 };

@@ -2,11 +2,10 @@ import { Navbar, Container, Nav } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import user from "../assets/Images/user.jpg";
 import jwtDecode from "jwt-decode";
-import { useEffect, useState } from "react";
-import axios from "axios";
-
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile } from "./../redux/actions/auth";
 const Navigation = () => {
-  const [profile, setProfile] = useState(null);
   const userToken = localStorage.getItem("token");
   let decoded;
 
@@ -15,23 +14,13 @@ const Navigation = () => {
     decoded = decodedToken;
   }
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userId = decoded?.id;
+  const { data } = useSelector((state) => state.authReducer);
 
   useEffect(() => {
-    function getProfile() {
-      return axios.get(
-        import.meta.env.VITE_REACT_BACKEND_URL + `/detail/${decoded?.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
-    }
-
-    getProfile().then((res) => {
-      setProfile(res.data);
-    });
-  }, [decoded?.id, userToken]);
+    dispatch(getProfile(userId));
+  }, [dispatch, userId]);
 
   return (
     <>
@@ -74,10 +63,10 @@ const Navigation = () => {
                     backgroundColor: "#efc81a",
                   }}
                 ></div>
-                <Link to={`/edit-profile/${profile?.data[0]?.id}`}>
+                <Link to={`/edit-profile/${data?.data[0]?.id}`}>
                   <div>
                     <img
-                      src={profile?.data[0]?.photo || user}
+                      src={data?.data[0]?.photo || user}
                       alt="profile"
                       width="50px"
                       height="50px"
@@ -86,7 +75,7 @@ const Navigation = () => {
                   </div>
                 </Link>
                 <div>
-                  <h5 className="m-0">{profile?.data[0]?.name}</h5>
+                  <h5 className="m-0">{data?.data[0]?.name}</h5>
                   <h5
                     className="m-0 fw-bold"
                     style={{ cursor: "pointer" }}

@@ -46,7 +46,7 @@ This app was built with some technologies below:
 - Redux
 - Bootstrap
 - React-botstrap
-- React-toasrify
+- React-toastify
 
 ## Installation
 
@@ -78,9 +78,9 @@ If you want to run this project locally, we recommend you configure the back-end
 | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
 | [![login.png](https://i.postimg.cc/wxXPvT9C/login.png)](https://postimg.cc/mhrVp4zj) | [![register.png](https://i.postimg.cc/zGBP0CTN/register.png)](https://postimg.cc/rKBJpthZ) |
 
-| Landing Page                                                                                       | Deail Recipe Page                                                                                  |
-| -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| [![landing-page.png](https://i.postimg.cc/kgJd9R8Y/landing-page.png)](https://postimg.cc/rKPHNmf5) | [![detail-resep.png](https://i.postimg.cc/Hkp6jQ65/detail-resep.png)](https://postimg.cc/nCP4PQbc) |
+| Landing Page                                                                                     | Deail Recipe Page                                                                                  |
+| ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| [![Food-Recipe.png](https://i.postimg.cc/3w7mR9nn/Food-Recipe.png)](https://postimg.cc/w1f745Km) | [![detail-resep.png](https://i.postimg.cc/Hkp6jQ65/detail-resep.png)](https://postimg.cc/nCP4PQbc) |
 
 | Deail Profile Page                                                                                     | Home Page                                                                          |
 | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
@@ -89,6 +89,8 @@ If you want to run this project locally, we recommend you configure the back-end
 | Add Recipe Page                                                                                | Update Recipe Page                                                                                   |
 | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | [![add-recipe.png](https://i.postimg.cc/k559NRgR/add-recipe.png)](https://postimg.cc/VJ23m6Mz) | [![update-recipe.png](https://i.postimg.cc/YCzqzwNZ/update-recipe.png)](https://postimg.cc/VJ58zpVW) |
+
+| Edit Profile Page |[![edit-profile.png](https://i.postimg.cc/7LWBTpdq/edit-profile.png)](https://postimg.cc/Z96PGDJQ)
 
 ## Contributing
 
