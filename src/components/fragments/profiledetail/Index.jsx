@@ -13,15 +13,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { LineWave } from "react-loader-spinner";
 
 const Index = () => {
-  const [show, setShow] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [modalVisibility, setModalVisibility] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
 
   const dispatch = useDispatch();
   const { recipe, isLoading } = useSelector((state) => state.myProductReducer);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
+  const handleClose = () => setModalVisibility({});
+  const handleShow = (item) => {
+    setItemToDelete(item);
+    setModalVisibility({ [item.id]: true });
+  };
   const handleNext = () => {
     if (currentPage < totalPage) {
       setCurrentPage(currentPage + 1);
@@ -34,8 +38,9 @@ const Index = () => {
     }
   };
 
-  const handleDelete = (id) => {
-    dispatch(deleteRecipe(id));
+  const handleDelete = async () => {
+    await dispatch(deleteRecipe(itemToDelete.id));
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -176,38 +181,48 @@ const Index = () => {
                           <Button
                             className="border border-0 fw-bold py-1 px-3 rounded"
                             style={{ backgroundColor: "#F57E71" }}
-                            onClick={handleShow}
+                            onClick={() => handleShow(item)}
                           >
                             Delete Menu
                           </Button>
 
-                          <Modal show={show} onHide={handleClose}>
-                            <Modal.Header closeButton>
-                              <Modal.Title>Attention!</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                              Are you sure want to delete this product?
-                            </Modal.Body>
-                            <Modal.Footer>
-                              <Button
-                                className="border border-0 fw-bold py-1 px-3 rounded"
-                                style={{ backgroundColor: "#2a9235" }}
-                                onClick={handleClose}
-                              >
-                                Cancel
-                              </Button>
-                              <Button
-                                className="border border-0 fw-bold py-1 px-3 rounded"
-                                onClick={() => {
-                                  handleDelete(item.id);
-                                  handleClose();
-                                }}
-                                style={{ backgroundColor: "#F57E71" }}
-                              >
-                                Delete
-                              </Button>
-                            </Modal.Footer>
-                          </Modal>
+                          <div>
+                            <Modal
+                              show={modalVisibility[item.id]}
+                              onHide={handleClose}
+                              backdrop="static"
+                              keyboard={false}
+                            >
+                              <Modal.Header closeButton>
+                                <Modal.Title>Delete</Modal.Title>
+                              </Modal.Header>
+                              {itemToDelete && (
+                                <Modal.Body>
+                                  Do you wanna delete{" "}
+                                  <strong>{itemToDelete.title}</strong>?
+                                </Modal.Body>
+                              )}
+                              <Modal.Footer>
+                                <Button
+                                  variant="warning w-100 text-white"
+                                  onClick={() => {
+                                    if (itemToDelete) {
+                                      handleDelete();
+                                      handleClose();
+                                    }
+                                  }}
+                                >
+                                  Yes
+                                </Button>
+                                <Button
+                                  variant="secondary w-100"
+                                  onClick={handleClose}
+                                >
+                                  Close
+                                </Button>
+                              </Modal.Footer>
+                            </Modal>
+                          </div>
                         </div>
                       </div>
                     </Col>
