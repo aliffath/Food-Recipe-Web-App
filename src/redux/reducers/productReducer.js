@@ -7,18 +7,18 @@ const initialState = {
 
 const productReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "POST_RECIPE_PENDING" |
-      "UPDATE_RECIPE_PENDING" |
-      "GET_DETAIL_PENDING" |
-      "DELETE_PRODUCT_PENDING":
+    case "POST_RECIPE_PENDING":
+    case "UPDATE_RECIPE_PENDING":
+    case "GET_DETAIL_PENDING":
+    case "DELETE_PRODUCT_PENDING":
       return {
         ...state,
         isLoading: true,
       };
-    case "POST_RECIPE_SUCCESS" |
-      "UPDATE_RECIPE_SUCCESS" |
-      "GET_DETAIL_SUCCESS" |
-      "DELETE_PRODUCT_SUCCESS":
+    case "POST_RECIPE_SUCCESS":
+    case "UPDATE_RECIPE_SUCCESS":
+    case "GET_DETAIL_SUCCESS":
+    case "DELETE_PRODUCT_SUCCESS":
       return {
         ...state,
         data: action.payload,
@@ -26,10 +26,10 @@ const productReducer = (state = initialState, action) => {
         message: "",
         isError: false,
       };
-    case "POST_RECIPE_FAILED" |
-      "UPDATE_RECIPE_FAILED" |
-      "GET_DETAIL_FAILED" |
-      "DELETE_PRODUCT_FAILED":
+    case "POST_RECIPE_FAILED":
+    case "UPDATE_RECIPE_FAILED":
+    case "GET_DETAIL_FAILED":
+    case "DELETE_PRODUCT_FAILED":
       return {
         ...state,
         data: null,
