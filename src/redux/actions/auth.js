@@ -9,8 +9,6 @@ export const actionLogin = (data, navigate) => async (dispatch) => {
       data
     );
     localStorage.setItem("token", result.data.token);
-    localStorage.setItem("name", result.data.dataUser.name);
-    localStorage.setItem("photo", result.data.dataUser.photo);
 
     dispatch({ payload: result.data, type: "AUTH_LOGIN_SUCCESS" });
     toast.success("Login Successfully");

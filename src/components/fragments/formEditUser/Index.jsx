@@ -8,8 +8,8 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LineWave } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
-import { actionUpdate, getProfile } from "./../../../redux/actions/auth";
-
+import { actionUpdate } from "./../../../redux/actions/auth";
+import axios from "axios";
 const Index = () => {
   const { userId } = useParams();
   const [photo, setPhoto] = useState(null);
@@ -19,14 +19,26 @@ const Index = () => {
     photo: "",
     photoUrl: "",
   });
+  const [profile, setProfile] = useState(null);
+  const userToken = localStorage.getItem("token");
 
   useEffect(() => {
-    dispatch(getProfile(userId));
-  }, [dispatch, userId]);
+    function getProfile() {
+      return axios.get(
+        import.meta.env.VITE_REACT_BACKEND_URL + `/detail/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+    }
 
-  const { data, isLoading, isError } = useSelector(
-    (state) => state.authReducer
-  );
+    getProfile().then((res) => {
+      setProfile(res.data);
+    });
+  }, [userId, userToken]);
+  const { isLoading, isError } = useSelector((state) => state.authReducer);
   const handleInput = (e) => {
     const { value, name } = e.target;
     setDataUser({ ...dataUser, [name]: value });
@@ -46,6 +58,7 @@ const Index = () => {
     bodyFormData.append("photo", photo);
     try {
       await dispatch(actionUpdate(bodyFormData, userId));
+      window.location.reload();
     } catch (error) {
       toast.error(isError || "Internal server error");
     }
@@ -101,7 +114,7 @@ const Index = () => {
                 src={
                   dataUser.photoUrl ||
                   dataUser.photo ||
-                  data?.data[0]?.photo ||
+                  profile?.data[0]?.photo ||
                   user
                 }
                 alt="Profile"
@@ -121,7 +134,7 @@ const Index = () => {
                 />
               </Form.Group>
               <p className="text-center fw-bold fs-4">
-                {dataUser.name || data?.data[0]?.name}
+                {dataUser.name || profile?.data[0]?.name}
               </p>
               <Col md={4}>
                 <Form onSubmit={handleSubmit}>
