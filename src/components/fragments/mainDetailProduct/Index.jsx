@@ -199,9 +199,10 @@ const Index = () => {
                 <div className="d-flex my-5 coments">
                   <div className="col-md-4 d-flex gap-4 justify-content-center">
                     <img
-                      src={photo}
+                      src={item.author_photo}
                       alt="profle"
-                      width="40px"
+                      width={50}
+                      height={50}
                       className="rounded rounded-circle"
                     />
 
