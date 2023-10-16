@@ -1,6 +1,6 @@
-import { Fragment, useEffect } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
-
+import { Fragment, useEffect, useState } from "react";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import { BiBookmark, BiLike } from "react-icons/bi";
 import "./detailMenu.css";
@@ -8,14 +8,75 @@ import photo from "../../../assets/Images/user.jpg";
 import { detailRecipe } from "./../../../redux/actions/product";
 import { useDispatch, useSelector } from "react-redux";
 import { LineWave } from "react-loader-spinner";
-
+import { ToastContainer, toast } from "react-toastify";
 const Index = () => {
   const { menuId } = useParams();
   const dispatch = useDispatch();
+
   const { data, isLoading } = useSelector((state) => state.productReducer);
+  const [comment, setComment] = useState(null);
+  const [totalComment, setTotalComment] = useState(0);
+  const [inputComment, setInputComment] = useState({
+    recipe_id: menuId,
+    comment_text: "",
+    user_id: localStorage.getItem("id"),
+  });
+
+  const getComment = () => {
+    axios
+      .get(import.meta.env.VITE_REACT_BACKEND_URL + `/coment/${menuId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setTotalComment(res.data.data.length);
+        setComment(res.data.data);
+        toast.success("Success get comment Recipe");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(`${err}`);
+      });
+  };
+
+  const postComent = (event) => {
+    event.preventDefault();
+    axios
+      .post(
+        import.meta.env.VITE_REACT_BACKEND_URL + "/postComent",
+        inputComment,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        toast.success("Comment Success");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.message);
+      });
+  };
+
+  const onChange = (e) => {
+    setInputComment({
+      ...inputComment,
+      [e.target.name]: e.target.value,
+    });
+    console.log(inputComment);
+  };
 
   useEffect(() => {
     dispatch(detailRecipe(menuId));
+    getComment();
   }, [dispatch, menuId]);
 
   if (isLoading) {
@@ -46,6 +107,7 @@ const Index = () => {
   }
   return (
     <Fragment>
+      <ToastContainer autoClose={1000} />
       <Container className="my-5">
         <Row>
           <Col md={12}>
@@ -80,7 +142,7 @@ const Index = () => {
                     day: "numeric",
                   })}
                 </p>
-                <p className="m-0">20 Likes - 2 Comments</p>
+                <p className="m-0">20 Likes -{totalComment} Comments</p>
               </div>
             </div>
           </Col>
@@ -131,79 +193,64 @@ const Index = () => {
       <Container>
         <Row>
           <Col md={12} className="horizontal"></Col>
-          <div className="d-flex my-5 coments">
-            <div className="col-md-4 d-flex gap-4 justify-content-center">
-              <img
-                src={photo}
-                alt="profle"
-                width="40px"
-                className="rounded rounded-circle"
-              />
+          {comment?.map((item, index) => {
+            return (
+              <div key={index}>
+                <div className="d-flex my-5 coments">
+                  <div className="col-md-4 d-flex gap-4 justify-content-center">
+                    <img
+                      src={photo}
+                      alt="profle"
+                      width="40px"
+                      className="rounded rounded-circle"
+                    />
 
-              <div>
-                <p className="m-0">Karen</p>
-                <p className="m-0 fw-bold">20 Recipes</p>
+                    <div>
+                      <p className="m-0">{item.author}</p>
+                      <p className="m-0 fw-bold">{item.formatted_create_at}</p>
+                    </div>
+                    <div
+                      style={{
+                        height: "60px",
+                        width: "5px",
+                        backgroundColor: "#efc81a",
+                      }}
+                    ></div>
+                  </div>
+                  <div className="col-md-8 d-flex align-items-center text-coments">
+                    <p className="m-0">{item.comment_text}</p>
+                  </div>
+                </div>
               </div>
-              <div
-                style={{
-                  height: "60px",
-                  width: "5px",
-                  backgroundColor: "#efc81a",
-                }}
-              ></div>
-            </div>
-            <div className="col-md-8 d-flex align-items-center text-coments">
-              <p className="m-0">
-                wow,i just made this and it was delicious thanks htmlFor sharing
-              </p>
-            </div>
-          </div>
-          <div className="d-flex mb-5 coments">
-            <div className="col-md-4 d-flex gap-4 justify-content-center">
-              <img
-                src={photo}
-                alt="profle"
-                width="40px"
-                className="rounded rounded-circle"
-              />
+            );
+          })}
 
-              <div>
-                <p className="m-0">Ariel</p>
-                <p className="m-0 fw-bold">20 Recipes</p>
-              </div>
-              <div
-                style={{
-                  height: "60px",
-                  width: "5px",
-                  backgroundColor: "#efc81a",
-                }}
-              ></div>
-            </div>
-            <div className="col-md-8 d-flex align-items-center text-coments">
-              <p className="m-0">so simple and delicious</p>
-            </div>
-          </div>
           <div className="col-md-12 horizontal"></div>
         </Row>
       </Container>
 
       <div className="container my-5">
-        <div className="mb-3">
-          <label htmlFor="coments" className="form-label"></label>
-          <textarea
-            className="form-control"
-            id="formcoment"
-            rows="5"
-            placeholder="Your Comment Here!"
-            style={{ backgroundColor: "#f6f5f4" }}
-          ></textarea>
-        </div>
-        <button
-          className="rounded border border-0 text-white fw-bold p-2"
-          style={{ backgroundColor: "#ffb167" }}
-        >
-          Send a comment
-        </button>
+        <Form onSubmit={postComent}>
+          <div className="mb-3">
+            <label htmlFor="coments" className="form-label"></label>
+            <textarea
+              className="form-control"
+              id="comment_text"
+              rows="5"
+              placeholder="Your Comment Here!"
+              style={{ backgroundColor: "#f6f5f4" }}
+              value={inputComment.comment_text}
+              onChange={onChange}
+              name="comment_text"
+            ></textarea>
+          </div>
+          <button
+            className="rounded border border-0 text-white fw-bold p-2"
+            style={{ backgroundColor: "#ffb167" }}
+          >
+            Send a comment
+          </button>
+        </Form>
       </div>
     </Fragment>
   );

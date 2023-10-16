@@ -37,6 +37,12 @@ const AddProduct = () => {
 
   const postRecipe = async (e) => {
     e.preventDefault();
+
+    const { title, ingredients, category_id, photo_url } = inputData;
+    if (!title || !ingredients || !category_id || !photo_url) {
+      toast.error("Please fill in all the fields");
+      return;
+    }
     const data = new FormData();
     data.append("title", inputData.title);
     data.append("ingredients", inputData.ingredients);
@@ -44,12 +50,6 @@ const AddProduct = () => {
     data.append("image", image);
 
     console.log(image);
-
-    const { title, ingredients, category_id, photo_url } = inputData;
-    if (!title || !ingredients || !category_id || !photo_url) {
-      toast.error("Please fill in all the fields");
-      return;
-    }
 
     try {
       await dispatch(addRecipe(data, navigate));

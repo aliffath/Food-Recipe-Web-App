@@ -204,7 +204,8 @@ const Index = () => {
                               )}
                               <Modal.Footer>
                                 <Button
-                                  variant="warning w-100 text-white"
+                                  style={{ backgroundColor: " #00e092" }}
+                                  variant=" w-100 text-white fw-bold"
                                   onClick={() => {
                                     if (itemToDelete) {
                                       handleDelete();
@@ -215,10 +216,11 @@ const Index = () => {
                                   Yes
                                 </Button>
                                 <Button
-                                  variant="secondary w-100"
+                                  style={{ backgroundColor: "#F57E71" }}
+                                  variant=" w-100 fw-bold"
                                   onClick={handleClose}
                                 >
-                                  Close
+                                  No
                                 </Button>
                               </Modal.Footer>
                             </Modal>

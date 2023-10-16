@@ -9,7 +9,7 @@ export const actionLogin = (data, navigate) => async (dispatch) => {
       data
     );
     localStorage.setItem("token", result.data.token);
-
+    localStorage.setItem("id", result.data.dataUser.id);
     dispatch({ payload: result.data, type: "AUTH_LOGIN_SUCCESS" });
     toast.success("Login Successfully");
     setTimeout(() => {
