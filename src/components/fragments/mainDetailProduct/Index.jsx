@@ -8,7 +8,7 @@ import photo from "../../../assets/Images/user.jpg";
 import { detailRecipe } from "./../../../redux/actions/product";
 import { useDispatch, useSelector } from "react-redux";
 import { LineWave } from "react-loader-spinner";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, Bounce } from "react-toastify";
 const Index = () => {
   const { menuId } = useParams();
   const dispatch = useDispatch();
@@ -33,7 +33,6 @@ const Index = () => {
         console.log(res);
         setTotalComment(res.data.data.length);
         setComment(res.data.data);
-        toast.success("Success get comment Recipe");
       })
       .catch((err) => {
         console.log(err);
@@ -107,7 +106,19 @@ const Index = () => {
   }
   return (
     <Fragment>
-      <ToastContainer autoClose={1000} />
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        transition={Bounce}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <Container className="my-5">
         <Row>
           <Col md={12}>
