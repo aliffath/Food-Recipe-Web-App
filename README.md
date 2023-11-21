@@ -13,7 +13,7 @@
     <a href="https://github.com/aliffath/Food-Recipe-Web-App"><strong>Explore the docs »</strong></a>
     <br/>
     <br/>
-    <a href="https://github.com/aliffath/Food-Recipe-Web-App">View Demo</a>
+    <a href="https://food-recipe-web-app.vercel.app/">View Demo</a>
     .
     <a href="https://github.com/aliffath/Food-Recipe-Web-App/issues">Report Bug</a>
     .
@@ -47,6 +47,12 @@ This app was built with some technologies below:
 - Bootstrap
 - React-botstrap
 - React-toastify
+
+### Prerequisites
+
+Before going to the installation stage there are some software that must be installed first.
+
+- **NodeJS**, I'm using **v18.16.0** when this docs is uploaded. You can download NodeJS in https://nodejs.org/en/download
 
 ## Installation
 
@@ -107,6 +113,8 @@ Contributions are what make the open-source community such an amazing place to l
 :rocket: [`Backend Mama Recipe`](https://github.com/aliffath/recipe-API)
 
 :rocket: [`Frontend Mama Recipe`](https://github.com/aliffath/Food-Recipe-Web-App)
+
+:rocket: [`Demo Project`](https://food-recipe-web-app.vercel.app/)
 
 ## Contact
 
